@@ -37,8 +37,7 @@ fun performanceOptionsCatalog(): List<OptimizeOption> {
             summary = "Manter espaço livre ajuda o sistema.",
             details = "Pouco armazenamento pode degradar desempenho. Limpe arquivos grandes e cache quando necessário.",
             deepLinks = listOf(
-                DeepLink(Intent(Settings.ACTION_INTERNAL_STORAGE_SETTINGS)),
-                DeepLink(Intent(Settings.ACTION_STORAGE_SETTINGS))
+                DeepLink(Intent(Settings.ACTION_INTERNAL_STORAGE_SETTINGS))
             )
         ),
         OptimizeOption(
