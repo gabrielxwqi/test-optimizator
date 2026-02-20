@@ -1,6 +1,6 @@
 package com.hadiyarajesh.composetemplate.ui
 
-import androidx.compose.foundation.clickable
+import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -16,6 +16,7 @@ import com.hadiyarajesh.composetemplate.optimizer.openBestDeepLink
 @Composable
 fun OptimizerScreen(
     title: String,
+    subtitle: String,
     options: List<OptimizeOption>,
     onBack: () -> Unit
 ) {
@@ -23,63 +24,82 @@ fun OptimizerScreen(
     var selected by remember { mutableStateOf<OptimizeOption?>(null) }
     val doneMap = remember { mutableStateMapOf<String, Boolean>() }
 
-    Column(Modifier.fillMaxSize().padding(16.dp)) {
-        Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-            TextButton(onClick = onBack) { Text("Voltar") }
-            Spacer(Modifier.width(8.dp))
-            Text(title, style = MaterialTheme.typography.headlineSmall)
+    Scaffold(
+        topBar = {
+            Surface(tonalElevation = 8.dp) {
+                Column(Modifier.fillMaxWidth().padding(16.dp)) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        TextButton(onClick = onBack) { Text("Voltar") }
+                        Spacer(Modifier.width(8.dp))
+                        Text(title, style = MaterialTheme.typography.titleLarge)
+                    }
+                    Text(subtitle, style = MaterialTheme.typography.bodyMedium)
+                }
+            }
         }
-
-        Spacer(Modifier.height(12.dp))
-
-        Button(onClick = { /* manual */ }, modifier = Modifier.fillMaxWidth()) {
-            Text("Otimizar (manual)")
-        }
-
-        Spacer(Modifier.height(12.dp))
-
-        LazyColumn(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+    ) { padding ->
+        LazyColumn(
+            modifier = Modifier
+                .padding(padding)
+                .fillMaxSize()
+                .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
             items(options) { opt ->
-                Card(Modifier.fillMaxWidth()) {
-                    Column(Modifier.padding(12.dp)) {
+                ElevatedCard(
+                    modifier = Modifier.fillMaxWidth(),
+                    elevation = CardDefaults.elevatedCardElevation(defaultElevation = 10.dp)
+                ) {
+                    Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
                         Row(
                             Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.SpaceBetween,
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Text(opt.title, style = MaterialTheme.typography.titleMedium)
+                            Column(Modifier.weight(1f)) {
+                                Text(opt.title, style = MaterialTheme.typography.titleMedium)
+                                Text(opt.summary, style = MaterialTheme.typography.bodyMedium)
+                            }
                             Checkbox(
                                 checked = doneMap[opt.id] == true,
                                 onCheckedChange = { doneMap[opt.id] = it }
                             )
                         }
 
-                        Text(opt.summary)
-                        Spacer(Modifier.height(8.dp))
+                        Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                            Button(
+                                onClick = {
+                                    val ok = context.openBestDeepLink(opt)
+                                    if (!ok) {
+                                        Toast.makeText(
+                                            context,
+                                            "Não consegui abrir um atalho direto neste aparelho. Use a explicação e procure a opção manualmente.",
+                                            Toast.LENGTH_LONG
+                                        ).show()
+                                    }
+                                }
+                            ) { Text("Abrir") }
 
-                        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                            OutlinedButton(onClick = { context.openBestDeepLink(opt) }) {
-                                Text("Ir para config")
+                            OutlinedButton(onClick = { selected = opt }) {
+                                Text("Detalhes")
                             }
-                            Text(
-                                "Detalhes",
-                                modifier = Modifier
-                                    .clickable { selected = opt }
-                                    .padding(10.dp)
-                            )
                         }
                     }
                 }
             }
-        }
-    }
 
-    if (selected != null) {
-        AlertDialog(
-            onDismissRequest = { selected = null },
-            confirmButton = { TextButton(onClick = { selected = null }) { Text("Fechar") } },
-            title = { Text(selected!!.title) },
-            text = { Text(selected!!.details) }
-        )
+            item { Spacer(Modifier.height(8.dp)) }
+        }
+
+        if (selected != null) {
+            AlertDialog(
+                onDismissRequest = { selected = null },
+                confirmButton = {
+                    TextButton(onClick = { selected = null }) { Text("Fechar") }
+                },
+                title = { Text(selected!!.title) },
+                text = { Text(selected!!.details) }
+            )
+        }
     }
 }
