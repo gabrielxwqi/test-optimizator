@@ -69,6 +69,8 @@ dependencies {
     implementation(libs.bundles.compose.ui.impl)
     implementation(libs.material3)
     implementation(libs.navigation.compose)
+    implementation(platform("androidx.compose:compose-bom:2024.10.00"))
+    implementation("androidx.compose.material3:material3:1.3.1")
 
     implementation(libs.hilt.android)
     implementation(libs.hilt.navigation.compose)
