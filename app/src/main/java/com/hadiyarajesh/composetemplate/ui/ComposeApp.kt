@@ -17,10 +17,18 @@ fun ComposeApp() {
         var screen by remember { mutableStateOf(Screen.HOME) }
 
         when (screen) {
-            Screen.HOME -> HomeScreen(
-                onBattery = { screen = Screen.BATTERY },
-                onPerformance = { screen = Screen.PERFORMANCE }
-            )
+            Screen.HOME -> Column(
+                Modifier.fillMaxSize().padding(20.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                Text("Otimizador", style = MaterialTheme.typography.headlineMedium)
+                Button(onClick = { screen = Screen.BATTERY }, modifier = Modifier.fillMaxWidth()) {
+                    Text("Bateria")
+                }
+                Button(onClick = { screen = Screen.PERFORMANCE }, modifier = Modifier.fillMaxWidth()) {
+                    Text("Desempenho")
+                }
+            }
 
             Screen.BATTERY -> OptimizerScreen(
                 title = "Bateria",
@@ -33,29 +41,6 @@ fun ComposeApp() {
                 options = performanceOptionsCatalog(),
                 onBack = { screen = Screen.HOME }
             )
-        }
-    }
-}
-
-@Composable
-private fun HomeScreen(
-    onBattery: () -> Unit,
-    onPerformance: () -> Unit
-) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(20.dp),
-        verticalArrangement = Arrangement.spacedBy(12.dp)
-    ) {
-        Text("Otimizador", style = MaterialTheme.typography.headlineMedium)
-        Text("Escolha um modo:", style = MaterialTheme.typography.titleMedium)
-
-        Button(onClick = onBattery, modifier = Modifier.fillMaxWidth()) {
-            Text("Bateria")
-        }
-        Button(onClick = onPerformance, modifier = Modifier.fillMaxWidth()) {
-            Text("Desempenho")
         }
     }
 }
