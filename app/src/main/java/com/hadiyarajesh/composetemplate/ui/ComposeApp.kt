@@ -25,12 +25,14 @@ fun ComposeApp() {
 
             Screen.BATTERY -> OptimizerScreen(
                 title = "Bateria",
+                subtitle = "Checklist manual com atalhos e explicações.",
                 options = batteryOptionsCatalog(),
                 onBack = { screen = Screen.HOME }
             )
 
             Screen.PERFORMANCE -> OptimizerScreen(
                 title = "Desempenho",
+                subtitle = "Ajustes avançados (com cautela).",
                 options = performanceOptionsCatalog(),
                 onBack = { screen = Screen.HOME }
             )
@@ -42,7 +44,6 @@ fun ComposeApp() {
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun HomePremium(
     onBattery: () -> Unit,
@@ -50,7 +51,7 @@ private fun HomePremium(
     onDeviceInfo: () -> Unit
 ) {
     Scaffold(
-        topBar = { TopAppBar(title = { Text("Otimizador") }) }
+        topBar = { PremiumTopBar(title = "Otimizador") }
     ) { padding ->
         Column(
             Modifier
@@ -59,51 +60,85 @@ private fun HomePremium(
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            ElevatedCard(Modifier.fillMaxWidth()) {
-                Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                    Text("Perfis manuais", style = MaterialTheme.typography.titleLarge)
-                    Text(
-                        "Checklist guiado com atalhos para as telas corretas do sistema.",
-                        style = MaterialTheme.typography.bodyMedium
-                    )
-                }
-            }
+            PremiumInfoCard(
+                title = "Perfis manuais",
+                body = "Checklist guiado com atalhos para as telas corretas do sistema. Nada é alterado automaticamente."
+            )
 
-            ElevatedCard(Modifier.fillMaxWidth()) {
-                Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                    Text("Bateria", style = MaterialTheme.typography.titleLarge)
-                    Text("Aumente a duração com ajustes manuais recomendados.", style = MaterialTheme.typography.bodyMedium)
-                    Button(onClick = onBattery, modifier = Modifier.fillMaxWidth()) {
-                        Text("Abrir checklist de Bateria")
-                    }
-                }
-            }
+            PremiumActionCard(
+                title = "Bateria",
+                body = "Aumente a duração com ajustes manuais recomendados.",
+                buttonText = "Abrir checklist de Bateria",
+                onClick = onBattery
+            )
 
-            ElevatedCard(Modifier.fillMaxWidth()) {
-                Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                    Text("Desempenho", style = MaterialTheme.typography.titleLarge)
-                    Text("Ajustes avançados e opções do desenvolvedor (com cautela).", style = MaterialTheme.typography.bodyMedium)
-                    Button(onClick = onPerformance, modifier = Modifier.fillMaxWidth()) {
-                        Text("Abrir checklist de Desempenho")
-                    }
-                }
-            }
-
-            Spacer(Modifier.height(4.dp))
+            PremiumActionCard(
+                title = "Desempenho",
+                body = "Ajustes avançados e Opções do desenvolvedor (com cautela).",
+                buttonText = "Abrir checklist de Desempenho",
+                onClick = onPerformance
+            )
 
             OutlinedButton(
                 onClick = onDeviceInfo,
                 modifier = Modifier.fillMaxWidth()
-            ) { Text("Ver informações do aparelho") }
+            ) {
+                Text("Ver informações do aparelho")
+            }
 
-            ElevatedCard(Modifier.fillMaxWidth()) {
-                Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                    Text("Dica", style = MaterialTheme.typography.titleMedium)
-                    Text(
-                        "O app não altera configurações sozinho. Ele te leva direto ao lugar certo e explica cada opção.",
-                        style = MaterialTheme.typography.bodyMedium
-                    )
-                }
+            PremiumInfoCard(
+                title = "Dica",
+                body = "Se algum atalho não abrir no seu aparelho, use a explicação e procure a opção manualmente no menu equivalente."
+            )
+        }
+    }
+}
+
+@Composable
+private fun PremiumTopBar(title: String) {
+    Surface(
+        tonalElevation = 8.dp
+    ) {
+        Row(
+            Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp, vertical = 14.dp),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text(text = title, style = MaterialTheme.typography.titleLarge)
+        }
+    }
+}
+
+@Composable
+private fun PremiumInfoCard(title: String, body: String) {
+    ElevatedCard(
+        modifier = Modifier.fillMaxWidth(),
+        elevation = CardDefaults.elevatedCardElevation(defaultElevation = 10.dp)
+    ) {
+        Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            Text(title, style = MaterialTheme.typography.titleLarge)
+            Text(body, style = MaterialTheme.typography.bodyMedium)
+        }
+    }
+}
+
+@Composable
+private fun PremiumActionCard(
+    title: String,
+    body: String,
+    buttonText: String,
+    onClick: () -> Unit
+) {
+    ElevatedCard(
+        modifier = Modifier.fillMaxWidth(),
+        elevation = CardDefaults.elevatedCardElevation(defaultElevation = 10.dp)
+    ) {
+        Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
+            Text(title, style = MaterialTheme.typography.titleLarge)
+            Text(body, style = MaterialTheme.typography.bodyMedium)
+            Button(onClick = onClick, modifier = Modifier.fillMaxWidth()) {
+                Text(buttonText)
             }
         }
     }
