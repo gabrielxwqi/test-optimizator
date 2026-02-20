@@ -68,23 +68,29 @@ private fun HomePremium(
                 }
             }
 
-            ElevatedCard(modifier = Modifier.fillMaxWidth(), onClick = onBattery) {
-                Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
+            // Card bonito + botão (sem onClick no Card)
+            ElevatedCard(Modifier.fillMaxWidth()) {
+                Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
                     Text("Bateria", style = MaterialTheme.typography.titleLarge)
                     Text("Aumente a duração com ajustes manuais recomendados.", style = MaterialTheme.typography.bodyMedium)
+                    Button(onClick = onBattery, modifier = Modifier.fillMaxWidth()) {
+                        Text("Abrir checklist de Bateria")
+                    }
                 }
             }
 
-            ElevatedCard(modifier = Modifier.fillMaxWidth(), onClick = onPerformance) {
-                Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
+            ElevatedCard(Modifier.fillMaxWidth()) {
+                Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
                     Text("Desempenho", style = MaterialTheme.typography.titleLarge)
                     Text("Ajustes avançados e opções do desenvolvedor (com cautela).", style = MaterialTheme.typography.bodyMedium)
+                    Button(onClick = onPerformance, modifier = Modifier.fillMaxWidth()) {
+                        Text("Abrir checklist de Desempenho")
+                    }
                 }
             }
 
             Spacer(Modifier.height(4.dp))
 
-            // Botão "em baixo" como você pediu
             OutlinedButton(
                 onClick = onDeviceInfo,
                 modifier = Modifier.fillMaxWidth()
