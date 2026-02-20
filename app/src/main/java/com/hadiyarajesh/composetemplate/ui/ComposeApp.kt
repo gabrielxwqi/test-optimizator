@@ -42,6 +42,7 @@ fun ComposeApp() {
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun HomePremium(
     onBattery: () -> Unit,
@@ -68,7 +69,6 @@ private fun HomePremium(
                 }
             }
 
-            // Card bonito + botão (sem onClick no Card)
             ElevatedCard(Modifier.fillMaxWidth()) {
                 Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
                     Text("Bateria", style = MaterialTheme.typography.titleLarge)
@@ -94,9 +94,7 @@ private fun HomePremium(
             OutlinedButton(
                 onClick = onDeviceInfo,
                 modifier = Modifier.fillMaxWidth()
-            ) {
-                Text("Ver informações do aparelho")
-            }
+            ) { Text("Ver informações do aparelho") }
 
             ElevatedCard(Modifier.fillMaxWidth()) {
                 Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
