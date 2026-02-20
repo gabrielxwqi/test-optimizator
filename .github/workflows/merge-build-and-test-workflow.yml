@@ -44,7 +44,7 @@ jobs:
             ./**/build/reports/
 
       - name: Build Debug APK
-        run: ./gradlew assembleDebug
+        run: ./gradlew assembleDebug --stacktrace --info
 
       - name: List APK outputs (debug)
         run: ls -R **/build/outputs/apk || true
